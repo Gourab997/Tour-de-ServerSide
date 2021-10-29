@@ -27,6 +27,7 @@ async function run() {
 
     const database = client.db("tourde");
     const packageCollection = database.collection("package");
+    const bookingCollection = database.collection("booking");
 
     //packageGet
     app.get("/package", async (req, res) => {
@@ -35,11 +36,27 @@ async function run() {
       res.send(package);
     });
 
+    //bookingGet
+    app.get("/booking", async (req, res) => {
+      const cursor = bookingCollection.find({});
+      const booking = await cursor.toArray();
+      res.send(booking);
+    });
+
     //packagePost
     app.post("/createPackage", async (req, res) => {
       const package = req.body;
       const result = await packageCollection.insertOne(package);
       console.log(`Package created with id: ${result.insertedId}`);
+      res.json(result);
+    });
+
+    //bookingPost
+
+    app.post("/createBooking", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
+      console.log(`Booking created with id: ${result.insertedId}`);
       res.json(result);
     });
   } finally {
